@@ -76,11 +76,13 @@ npm run security:validate
 # 只检查当前暂存区（提交前快速检查）
 python scripts/check_sensitive.py --staged
 
-# 如果仓库是 Git clone，安装版本化 pre-push hook
+# 维护者首次 clone 后手动安装到当前项目的 .git/hooks/pre-push
 npm run security:install-hook
 ```
 
-扫描会拦截密钥、令牌、私钥、个人路径、常见联系方式、个人素材文件和可疑截图/录音文件名，并且只输出脱敏位置，不打印秘密原文。GitHub Actions 会在 push 和 pull request 上再次扫描完整历史。
+扫描会拦截密钥、令牌、私钥、个人路径、常见联系方式、个人素材文件、PNG/JPEG/GIF/PDF/ZIP/RIFF/ICO 等二进制头、嵌入式图片和超大文件，并且只输出 `source/path/rule/commit`，不打印秘密原文。GitHub Actions 会在 push 和 pull request 上再次扫描完整历史。
+
+安装器默认不会覆盖已有的未知 `.git/hooks/pre-push`；确认旧 hook 后确实需要替换时，才显式运行 `python scripts/install_pre_push_hook.py --force`。安装脚本不会把 `.git/hooks/pre-push` 加入提交，也不会修改共享的 `core.hooksPath`。
 
 提交时严禁使用 `git add .` 或 `git add -A`。请只暂存本次明确要提交的文件，例如：
 

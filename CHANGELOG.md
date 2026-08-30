@@ -12,6 +12,9 @@
 - 将 `AI-Video-Factory` 的可执行运行时并入同一个公开仓库；本地工作目录与 GitHub `main` 保持同源。
 - 增加可重复执行的 `setup.ps1` / `doctor.ps1`，新手不需要手动安装第二个插件；仓库内 HyperFrames/GSAP 与 Remotion 是核心必需引擎，宿主指导 Skill 仅为可选增强。
 - doctor 现在会实际启动 Chromium，并在缺依赖时 fail-closed，禁止静默退化成静态或通用剪辑。
+- 增加唯一的 `scripts/check_sensitive.py` 发布安全扫描器，覆盖工作区、完整 Git 历史、pre-push 提交范围、凭据、个人信息、本机路径、媒体文件头、嵌入式图片和超大文件；命中时只输出 `source/path/rule/commit`。
+- 增加 `scripts/install_pre_push_hook.py` 与 `hooks/pre-push`。维护者首次 clone 后手动安装到当前项目 `.git/hooks/pre-push`；未知 hook 默认不覆盖，显式 `--force` 才允许替换。
+- GitHub Actions 使用 `fetch-depth: 0`，并在其他校验前调用同一份扫描器的 `--history` 模式。
 
 ## 0.1.0 — 2026-08-25
 

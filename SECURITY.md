@@ -11,7 +11,7 @@ python scripts/check_sensitive.py --staged
 npm run security:validate
 ```
 
-`security:validate` 会检查当前工作区和所有本地 Git ref 可达的历史 blob。`setup.ps1` 或 `npm run security:install-hook` 会启用 `.githooks/pre-push`；GitHub Actions 也会在 push / pull request 时执行同一套全历史检查。扫描结果会隐藏匹配值，只显示文件和行号。
+`security:validate` 会检查当前工作区和所有本地 Git ref 可达的历史 blob。首次 clone 后由维护者手动运行 `npm run security:install-hook`，安装到当前项目自己的 `.git/hooks/pre-push`；如果那里已有未知 hook，安装器默认拒绝覆盖，只有显式 `--force` 才会替换。GitHub Actions 也会在 push / pull request 时执行同一份扫描器的全历史检查。命中结果只显示 `source`、`path`、`rule`、`commit`，不会打印匹配原文。
 
 严禁使用 `git add .` / `git add -A`。只暂存明确的源文件，并在提交前检查 `git diff --cached`。视频、截图、原始转写、项目产物和本机路径默认不属于公开运行时。
 
@@ -27,4 +27,4 @@ npm run security:validate
 
 Do not commit API keys, cookies, access tokens, private media, personal transcripts, or local machine paths. Keep credentials outside the repository. If a secret is exposed, revoke it first and contact the maintainer privately.
 
-The repository includes a dependency-free scanner (`scripts/check_sensitive.py`), a full-history validator, a versioned pre-push hook, and CI checks. Stage explicit files only; never use `git add .` or `git add -A`.
+The repository includes one dependency-free scanner (`scripts/check_sensitive.py`), a manual hook installer, a project-local pre-push hook, and CI checks. Stage explicit files only; never use `git add .` or `git add -A`.

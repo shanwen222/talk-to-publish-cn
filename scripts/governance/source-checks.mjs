@@ -42,15 +42,3 @@ export async function checkForbiddenCandidates(root) {
   }
   return issues;
 }
-
-export async function checkSecrets(root) {
-  const issues = [];
-  const pattern = /(?:API_KEY|TOKEN|COOKIE|SECRET)[ \t]*[:=][ \t]*["']?[A-Za-z0-9_./+-]{16,}/i;
-  for (const file of await listFirstPartyFiles(root)) {
-    if (["package-lock.json", "SOURCE_MANIFEST.json"].includes(path.basename(file))) continue;
-    const buffer = await readFile(file);
-    if (buffer.includes(0)) continue;
-    if (pattern.test(buffer.toString("utf8"))) issues.push(`Possible secret: ${path.relative(root, file)}`);
-  }
-  return issues;
-}

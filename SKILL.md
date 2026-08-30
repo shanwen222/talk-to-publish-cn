@@ -74,7 +74,7 @@ task directory or a copied Skill folder.
 8. **全组件回归**：全片渲染前列出每个 flow-like group；标注 `dynamic-with-cues`、`static-by-design` 或 `structural-sequence`。动态组至少检查 all-visible、first-focus、middle-focus、final-focus。参考 [regression-and-qa.md](references/regression-and-qa.md)。
 9. **渲染与合成**：先跑 HyperFrames lint/check/inspect/render，再用 Remotion 合成视觉轨、原音频和 Whisper 字幕。默认 1920×1080/30fps、H.264/AAC，除非用户另有要求。详细命令见 [rendering.md](references/rendering.md)。
 10. **人工 QA 与交付**：检查全分辨率关键帧、转场、字幕、脸/标题/字幕安全区、透明度、手机缩略图和媒体规格；更新 `WORK_PROGRESS.md`、`USER_FEEDBACK_LOG.md`、事故/经验记录和 source manifest，再交付文件路径与真实规格。不要自动对外发布。
-11. **发布安全门禁**：公开仓库前运行 `npm run security:validate`。首次克隆后运行 `npm run security:install-hook`（`setup.ps1` 会自动执行），让每次 `git push` 都先扫描完整历史；CI 也会重复检查。
+11. **发布安全门禁**：公开仓库前运行 `npm run security:validate`。首次克隆后由维护者手动运行 `npm run security:install-hook`，将唯一 hook 安装到当前项目的 `.git/hooks/pre-push`；未知 hook 默认不覆盖，只有显式 `--force` 才允许替换。CI 以 `--history` 重复检查完整历史。
 
 ## 参考资料 / References
 

@@ -27,6 +27,7 @@
 | 治理清单 | `SOURCE_MANIFEST.json` | 无 | `npm run manifest:check` | 总门禁 | 明确失败 |
 | 三条生产线拓扑与边界 | `docs/video-production-lines.md` | 无 | 文档治理；各线使用各自正式入口 | 用户、工作流、治理门禁 | 线别或入口未登记时明确失败 |
 | 生产经验与返工门禁 | `docs/production-lessons.md` | 无 | 文档治理；项目进度引用经验编号 | 用户、三条生产线、QA | 新问题未记录症状、原因和门禁时不得宣称经验已固化 |
+| 公开发布安全门禁 | `scripts/check_sensitive.py` | `.git/hooks/pre-push`（由 `hooks/pre-push` 安装）与 GitHub Actions 执行结果 | `--worktree-only`、`--history`、`--pre-push` | 本地提交、远端 CI、维护者 | 命中敏感规则或无法扫描时返回非零；不得回显匹配原文 |
 
 依赖锁文件 `package-lock.json` 是第三方版本解析的唯一镜像记录，由 npm 单向生成，禁止手工编辑。
 

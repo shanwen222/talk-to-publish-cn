@@ -2,7 +2,7 @@ import {mkdir, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {spawn} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {checkEncoding, checkForbiddenCandidates, checkSecrets} from "./source-checks.mjs";
+import {checkEncoding, checkForbiddenCandidates} from "./source-checks.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const results = [];
@@ -28,13 +28,13 @@ async function command(file, args) {
 for (const [name, check] of [
   ["source-uniqueness", checkForbiddenCandidates],
   ["encoding", checkEncoding],
-  ["security", checkSecrets],
 ]) {
   await record(name, async () => {
     const issues = await check(root);
     if (issues.length) throw new Error(issues.join("; "));
   });
 }
+await record("security", () => command("python", ["scripts/check_sensitive.py", "--history"]));
 await record("manifest", () => command(process.execPath, ["scripts/governance/check-manifest.mjs"]));
 await record("types", () => command(process.execPath, ["node_modules/typescript/bin/tsc", "--noEmit"]));
 await record("contracts", () => command(process.execPath, ["--import", "tsx", "--test", "tests/planners.test.ts", "tests/providers.test.ts", "tests/validation.test.ts", "tests/digital-human.test.ts"]));

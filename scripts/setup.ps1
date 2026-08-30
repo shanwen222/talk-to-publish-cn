@@ -117,23 +117,10 @@ Write-Host "运行最终环境检查..."
 & (Join-Path $PSScriptRoot "doctor.ps1")
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-$git = Get-Command git.exe -ErrorAction SilentlyContinue
-if ($git -and (Test-Path (Join-Path $repoRoot ".git"))) {
-  Push-Location $repoRoot
-  try {
-    & $git.Source config core.hooksPath .githooks
-    if ($LASTEXITCODE -ne 0) { throw "Git pre-push security hook installation failed." }
-    Write-Host "Enabled pre-push sensitive-data scan: .githooks/pre-push"
-  } finally {
-    Pop-Location
-  }
-} else {
-  Write-Host "Git worktree not detected; skipped pre-push installation. Run security:validate before publishing."
-}
-
 Push-Location $repoRoot
 try {
   $securityArgs = @($pythonSpec.Args) + @((Join-Path $repoRoot "scripts\check_sensitive.py"))
+  $git = Get-Command git.exe -ErrorAction SilentlyContinue
   if ($git -and (Test-Path (Join-Path $repoRoot ".git"))) { $securityArgs += "--history" }
   & $pythonSpec.Command $securityArgs
   if ($LASTEXITCODE -ne 0) { throw "Sensitive-data scan failed; clean the repository before continuing." }
