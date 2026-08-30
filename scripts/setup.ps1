@@ -133,7 +133,8 @@ if ($git -and (Test-Path (Join-Path $repoRoot ".git"))) {
 
 Push-Location $repoRoot
 try {
-  $securityArgs = @($pythonSpec.Args) + @((Join-Path $repoRoot "scripts\check_sensitive.py"), "--history")
+  $securityArgs = @($pythonSpec.Args) + @((Join-Path $repoRoot "scripts\check_sensitive.py"))
+  if ($git -and (Test-Path (Join-Path $repoRoot ".git"))) { $securityArgs += "--history" }
   & $pythonSpec.Command $securityArgs
   if ($LASTEXITCODE -ne 0) { throw "Sensitive-data scan failed; clean the repository before continuing." }
 } finally {

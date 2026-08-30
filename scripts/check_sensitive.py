@@ -117,6 +117,17 @@ def _path_is_ignored(relative: str) -> bool:
     return any(part in IGNORED_PARTS for part in Path(relative).parts)
 
 
+def _git_repo_available() -> bool:
+    result = subprocess.run(
+        ["git", "rev-parse", "--is-inside-work-tree"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return result.returncode == 0 and result.stdout.strip() == "true"
+
+
 def _name_findings(scope: str, relative: str) -> list[Finding]:
     findings: list[Finding] = []
     path = Path(relative)
@@ -164,11 +175,24 @@ def _content_findings(scope: str, relative: str, data: bytes) -> list[Finding]:
 
 
 def _worktree_paths() -> list[str]:
-    output = _run_git(["ls-files", "--cached", "--others", "--exclude-standard", "-z"], text=False)
-    return [item.decode("utf-8", "surrogateescape") for item in output.split(b"\0") if item]
+    if _git_repo_available():
+        output = _run_git(["ls-files", "--cached", "--others", "--exclude-standard", "-z"], text=False)
+        return [item.decode("utf-8", "surrogateescape") for item in output.split(b"\0") if item]
+    # A GitHub ZIP has no index.  Walk the unpacked directory so setup can
+    # still protect a beginner from accidentally publishing local material.
+    paths: list[str] = []
+    for path in ROOT.rglob("*"):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(ROOT).as_posix()
+        if not _path_is_ignored(relative):
+            paths.append(relative)
+    return paths
 
 
 def _staged_paths() -> list[str]:
+    if not _git_repo_available():
+        return []
     output = _run_git(["diff", "--cached", "--name-only", "--diff-filter=ACMR", "-z"], text=False)
     return [item.decode("utf-8", "surrogateescape") for item in output.split(b"\0") if item]
 
@@ -212,6 +236,8 @@ def scan_staged() -> list[Finding]:
 
 def scan_history() -> list[Finding]:
     """Scan every blob reachable from every local Git ref, deduplicated by SHA."""
+    if not _git_repo_available():
+        return []
     output = _run_git(["rev-list", "--objects", "--all"], text=True)
     findings: list[Finding] = []
     object_paths: dict[str, list[str]] = {}
