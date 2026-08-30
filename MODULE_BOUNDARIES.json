@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "modules": [
+    {"name":"workflow","owns":["workflow/**","agents/**"],"mayDependOn":["node-stdlib","ffmpeg-cli","external-voice-http-apis"],"mustNotDependOn":["remotion-ui-internals"]},
+    {"name":"remotion","owns":["remotion/**"],"mayDependOn":["workflow-public-project-data"],"mustNotDependOn":["provider-secrets"]},
+    {"name":"ffmpeg","owns":["ffmpeg/**"],"mayDependOn":["rendered-media"],"mustNotDependOn":["workflow-internal-decisions"]},
+    {"name":"voice-agent","owns":["workflow/voice-agent.ts","agents/voice_agent/**"],"mayDependOn":["script-artifact","external-voice-http-apis"],"mustNotDependOn":["provider-secrets-at-rest"]},
+    {"name":"music-agent","owns":["workflow/music-agent.ts","agents/music_agent/**"],"mayDependOn":["voice-artifact","ffmpeg-cli"],"mustNotDependOn":["publishing-accounts"]},
+    {"name":"viral-agent","owns":["workflow/viral-agent.ts","agents/viral_agent/**"],"mayDependOn":["project-spec"],"mustNotDependOn":["provider-secrets"]},
+    {"name":"thumbnail-agent","owns":["workflow/thumbnail-agent.ts","agents/thumbnail_agent/**","remotion/src/Thumbnail.tsx"],"mayDependOn":["project-spec","remotion-cli"],"mustNotDependOn":["publishing-accounts"]},
+    {"name":"platform-adapter","owns":["workflow/platform-adapters.ts"],"mayDependOn":["public-project-data"],"mustNotDependOn":["publishing-accounts","external-write-apis"]},
+    {"name":"content-intelligence","owns":["workflow/content-intelligence/**","agents/director_agent/**","agents/reference_agent/**","agents/content_strategy_agent/**","agents/copywriter_agent/**","pipelines/**","skills/**"],"mayDependOn":["public-project-data","ffprobe-cli","pipeline-definitions","skill-contracts"],"mustNotDependOn":["remotion-ui-internals","ffmpeg-implementation","provider-secrets-at-rest","external-write-apis"]},
+    {"name":"content-intelligence-tests","owns":["tests/content-intelligence.test.ts"],"mayDependOn":["content-intelligence-public-contract"],"mustNotDependOn":["live-paid-provider-calls","render-engine-internals"]},
+    {"name":"local-rough-cut","owns":["workflow/local-rough-cut.ts","scripts/whisper.ps1","tests/local-rough-cut.test.ts","docs/local-rough-cut.md"],"mayDependOn":["node-stdlib","ffmpeg-cli","ffprobe-cli","project-whisper-cli","local-user-media"],"mustNotDependOn":["chatcut-api","external-upload-api","paid-provider-calls","provider-secrets-at-rest"]},
+    {"name":"digital-human","owns":["workflow/digital-human/**","digital-human/**","agents/digital_human_agent/**"],"mayDependOn":["script-artifact","fish-audio-http-api","heygen-http-api","hyperframes-cli","ffprobe-cli"],"mustNotDependOn":["workflow/factory.ts","workflow/voice-agent.ts","workflow/music-agent.ts","remotion/**","ffmpeg/finalize.ps1","provider-secrets-at-rest"]},
+    {"name":"digital-human-tests","owns":["tests/digital-human.test.ts"],"mayDependOn":["digital-human-public-contract"],"mustNotDependOn":["live-paid-provider-calls"]},
+    {"name":"hyperframes-project","owns":["projects/*/hyperframes/**","projects/*/DESIGN.md","projects/*/storyboard.md","projects/*/asset_list.md","projects/*/voice_script.md","projects/*/assets/**","projects/*/voice/**","projects/*/final.mp4"],"mayDependOn":["user-provided-product-media","project-locked-hyperframes-cli","explicit-voice-provider"],"mustNotDependOn":["fabricated-product-ui","provider-secrets-at-rest","unlocked-network-cli"]},
+    {"name":"governance","owns":["AGENTS.md","SOURCE_OF_TRUTH.md","ADJUDICATION_AUTHORITY.md","DEPLOYMENT_MEMORY_CARD.md","WORK_PROGRESS.md","SOURCE_MANIFEST.json","CHANGELOG_DECISIONS.md","MODULE_BOUNDARIES.json","ARTIFACT_AND_OUTPUT_POLICY.json","CAPABILITY_AND_INTERFACE_CONTRACTS.json","EXECUTION_ENVIRONMENT_CONTRACT.md","docs/video-production-lines.md","docs/production-lessons.md","scripts/governance/**"],"mayDependOn":[],"mustNotDependOn":["generated-output"]}
+  ],
+  "resealAuthority": "exclusive-governance-lease"
+}

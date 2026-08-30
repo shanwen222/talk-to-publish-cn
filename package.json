@@ -1,0 +1,55 @@
+{
+  "name": "talk-to-publish-cn",
+  "version": "3.0.0",
+  "private": false,
+  "description": "从中文口播到可发布成片的单仓库 Skill 与本地视频生产运行时",
+  "type": "module",
+  "packageManager": "npm@11.9.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "setup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup.ps1",
+    "doctor": "node scripts/doctor.mjs",
+    "factory": "tsx workflow/factory.ts",
+    "factory:doctor": "tsx workflow/factory.ts doctor",
+    "digital-human": "tsx workflow/digital-human/cli.ts",
+    "demo": "tsx workflow/factory.ts demo",
+    "demo:v2": "tsx workflow/factory.ts demo-v2",
+    "voice": "tsx workflow/factory.ts voice",
+    "music": "tsx workflow/factory.ts music",
+    "thumbnail": "tsx workflow/factory.ts thumbnail",
+    "adapt": "tsx workflow/factory.ts adapt",
+    "providers": "tsx workflow/factory.ts providers",
+    "render": "tsx workflow/factory.ts render",
+    "build": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "gate": "npm run build && npm test && python scripts/validate_skill.py && npm run doctor",
+    "gate:faults": "node scripts/governance/fault-injection.mjs",
+    "manifest:update": "node scripts/governance/update-manifest.mjs",
+    "manifest:check": "node scripts/governance/check-manifest.mjs",
+    "playwright:check": "playwright test",
+    "vibe:doctor": "node workflow/vibeframe-wrapper.mjs doctor",
+    "vibe:dry-run": "node workflow/vibeframe-wrapper.mjs build . --dry-run --max-cost 0 --json",
+    "clean:temp": "node scripts/governance/clean-temp.mjs"
+  },
+  "dependencies": {
+    "@remotion/captions": "4.0.499",
+    "@remotion/cli": "4.0.499",
+    "@remotion/media": "4.0.499",
+    "hyperframes": "0.7.76",
+    "playwright": "1.62.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "remotion": "4.0.499",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@hyperframes/producer": "^0.7.76",
+    "@playwright/test": "1.62.0",
+    "@types/node": "24.3.0",
+    "@types/react": "19.1.12",
+    "tsx": "4.23.1",
+    "typescript": "5.9.2"
+  }
+}

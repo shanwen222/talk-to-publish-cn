@@ -1,0 +1,50 @@
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local Codex/runtime state
+.codex/
+.cache/
+node_modules/
+.venv/
+workflow/**/node_modules/
+playwright-browsers/
+.governance/leases/
+.governance/project-leases/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Personal media and generated video artifacts
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.wav
+*.mp3
+*.m4a
+*.png
+*.jpg
+*.jpeg
+*.webp
+output/
+renders/
+test-results/
+
+# Local project work and generated media
+projects/*
+!projects/**/
+!projects/**/.gitkeep
+remotion/public/*
+!remotion/public/.gitkeep
+*.srt
+*.vtt
+*.tsv
+*.jsonl

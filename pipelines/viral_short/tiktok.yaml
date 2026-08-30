@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "viral_short/tiktok",
+  "videoType": "故事视频",
+  "contentGoal": "在不承诺爆款的前提下优化短视频 Hook、节奏、情绪和 CTA。",
+  "platforms": ["抖音", "小红书", "YouTube"],
+  "durationOptions": [30, 60],
+  "durationPolicy": {"mode":"content-driven","minSeconds":15,"maxSeconds":60,"defaultTargetSeconds":30,"targetCharactersPerSecond":5.2},
+  "skills": ["viral_video", "cinematic_video", "shortform_copywriting"],
+  "template": "existing-viral-short-template",
+  "fixedStructure": ["冲突 Hook", "悬念", "推进", "转折", "结论", "CTA"],
+  "stages": [
+    {"id":"direct","agent":"Director Agent","goal":"确定冲突和情绪曲线","inputs":["用户主题"],"outputs":["director_plan.md"],"review":["Hook 可兑现"]},
+    {"id":"script","agent":"Script Agent","goal":"生成短句高密度脚本","inputs":["director_plan.md"],"outputs":["script.md"],"review":["无空洞夸张"]},
+    {"id":"copyedit","agent":"Copywriter Agent","goal":"按自然偏快口播做二次编辑和内容定时","inputs":["script.md"],"outputs":["copywriter_plan.md"],"review":["Hook 数量动态","每段有新信息","不粗暴变速"]},
+    {"id":"storyboard","agent":"Storyboard Agent","goal":"设计节奏镜头","inputs":["copywriter_plan.md"],"outputs":["storyboard.md"],"review":["镜头变化服务内容"]},
+    {"id":"render","agent":"Render Agent","goal":"调用现有视频流水线","inputs":["storyboard.md"],"outputs":["final.mp4"],"review":["单一 CTA"]}
+  ]
+}

@@ -1,0 +1,29 @@
+name: Validate runtime
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install locked JavaScript dependencies
+        run: npm ci
+      - name: Build TypeScript runtime
+        run: npm run build
+      - name: Run runtime tests
+        run: npm test
+      - name: Validate Skill package
+        run: python scripts/validate_skill.py

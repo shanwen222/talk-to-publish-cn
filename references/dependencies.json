@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "dependencies": [
+    {
+      "name": "node",
+      "kind": "system_runtime",
+      "source": "OpenJS Node.js",
+      "source_url": "https://nodejs.org/",
+      "ref": ">=22",
+      "install": "scripts/setup.ps1",
+      "verification": "scripts/doctor.mjs checks the Node.js major version",
+      "required": true,
+      "scope": "all tasks"
+    },
+    {
+      "name": "ffmpeg",
+      "kind": "system_runtime",
+      "source": "Gyan.FFmpeg",
+      "source_url": "https://ffmpeg.org/",
+      "ref": "8.1.2 target",
+      "install": "scripts/setup.ps1 via winget",
+      "verification": "scripts/doctor.mjs checks ffmpeg and ffprobe",
+      "required": true,
+      "scope": "all tasks that render or inspect media"
+    },
+    {
+      "name": "python-whisper",
+      "kind": "system_runtime",
+      "source": "Python",
+      "source_url": "https://www.python.org/",
+      "ref": "3.12",
+      "install": "scripts/setup.ps1",
+      "verification": "scripts/doctor.mjs checks the project .venv Whisper CLI",
+      "required": true,
+      "scope": "transcription, rough-cut, and any workflow requiring audio timing"
+    },
+    {
+      "name": "npm-runtime",
+      "kind": "repository_runtime",
+      "source": "package-lock.json",
+      "source_url": "https://docs.npmjs.com/cli/commands/npm-ci",
+      "ref": "package-lock.json",
+      "install": "scripts/setup.ps1 runs npm ci",
+      "verification": "scripts/doctor.mjs checks node_modules, Remotion, HyperFrames, and Playwright",
+      "required": true,
+      "scope": "all tasks"
+    },
+    {
+      "name": "hyperframes-runtime",
+      "kind": "repository_runtime",
+      "source": "package-lock.json (hyperframes + @hyperframes/producer)",
+      "source_url": "https://www.npmjs.com/package/hyperframes",
+      "ref": "hyperframes@0.7.76",
+      "install": "scripts/setup.ps1 runs npm ci",
+      "verification": "scripts/doctor.mjs checks the HyperFrames CLI package",
+      "required": true,
+      "scope": "all semantic motion and HyperFrames rendering tasks"
+    },
+    {
+      "name": "remotion-runtime",
+      "kind": "repository_runtime",
+      "source": "package-lock.json (@remotion/cli + remotion)",
+      "source_url": "https://www.npmjs.com/package/remotion",
+      "ref": "remotion@4.0.499",
+      "install": "scripts/setup.ps1 runs npm ci and prepares the Remotion browser",
+      "verification": "scripts/doctor.mjs checks @remotion/cli and the browser launch",
+      "required": true,
+      "scope": "all Remotion composition, caption, and final render tasks"
+    },
+    {
+      "name": "playwright-chromium",
+      "kind": "browser_runtime",
+      "source": "Playwright",
+      "source_url": "https://playwright.dev/",
+      "ref": "1.62.0",
+      "install": "scripts/setup.ps1",
+      "verification": "scripts/doctor.mjs runs the Chromium dry-run check",
+      "required": true,
+      "scope": "browser-backed visual QA and HyperFrames workflows"
+    },
+    {
+      "name": "whisper",
+      "kind": "python_package",
+      "source": "openai-whisper",
+      "source_url": "https://github.com/openai/whisper",
+      "ref": "20250625",
+      "install": "requirements-whisper.txt through scripts/setup.ps1",
+      "verification": "scripts/doctor.mjs checks .venv\\Scripts\\whisper.exe",
+      "required": true,
+      "scope": "transcription, rough-cut, and caption timing"
+    },
+    {
+      "name": "hyperframes-guidance",
+      "kind": "codex_skill_optional",
+      "source": "Codex curated capability (optional guidance)",
+      "source_url": "host://codex-curated-remote/hyperframes",
+      "ref": "host-managed",
+      "install": "not required; local npm runtime is included",
+      "verification": "If available, load hyperframes:hyperframes and hyperframes:gsap for extra guidance",
+      "required": false,
+      "scope": "optional HyperFrames authoring guidance"
+    },
+    {
+      "name": "remotion-guidance",
+      "kind": "codex_skill_optional",
+      "source": "Codex curated capability (optional guidance)",
+      "source_url": "host://codex-curated-remote/remotion",
+      "ref": "host-managed",
+      "install": "not required; local npm runtime is included",
+      "verification": "If available, load remotion:remotion-best-practices and path-specific Remotion Skills for extra guidance",
+      "required": false,
+      "scope": "optional Remotion composition/render/caption guidance"
+    }
+  ]
+}

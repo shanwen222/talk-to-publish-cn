@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "knowledge_video/explain",
+  "videoType": "知识视频",
+  "contentGoal": "把一个复杂问题解释清楚，并通过案例和互动保持观看。",
+  "platforms": ["抖音", "小红书", "YouTube"],
+  "durationOptions": [30, 60, 180],
+  "durationPolicy": {"mode":"content-driven","minSeconds":15,"maxSeconds":120,"defaultTargetSeconds":35,"targetCharactersPerSecond":5.0},
+  "skills": ["knowledge_creator", "viral_video", "shortform_copywriting"],
+  "template": "existing-knowledge-template",
+  "fixedStructure": ["Hook", "问题定义", "核心解释", "案例", "总结", "互动"],
+  "stages": [
+    {"id":"direct","agent":"Director Agent","goal":"确定解释路径","inputs":["用户主题"],"outputs":["director_plan.md"],"review":["受众明确"]},
+    {"id":"script","agent":"Script Agent","goal":"生成分层解释脚本","inputs":["director_plan.md"],"outputs":["script.md"],"review":["每十秒有信息变化","包含案例"]},
+    {"id":"copyedit","agent":"Copywriter Agent","goal":"压缩套话、核对信息密度并计算自然口播时长","inputs":["script.md"],"outputs":["copywriter_plan.md"],"review":["结论先行","不为节奏删掉必要限定","Hook 数量不固定"]},
+    {"id":"storyboard","agent":"Storyboard Agent","goal":"建立解释型分镜","inputs":["copywriter_plan.md"],"outputs":["storyboard.md"],"review":["视觉对应论点"]},
+    {"id":"render","agent":"Render Agent","goal":"调用现有视频流水线","inputs":["storyboard.md"],"outputs":["final.mp4"],"review":["字幕可读","结论准确"]}
+  ]
+}

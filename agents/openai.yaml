@@ -1,0 +1,7 @@
+interface:
+  display_name: "从口播到成片 · Talk to Publish"
+  short_description: "中文口播到成片：语义动效与手机端 QA / Chinese talking-head motion workflow"
+  default_prompt: "Use $talk-to-publish-cn / 从口播到成片。先运行 scripts/doctor.ps1；缺依赖时提示运行 scripts/setup.ps1，环境未通过前不要剪辑或静默降级。"
+
+policy:
+  allow_implicit_invocation: true

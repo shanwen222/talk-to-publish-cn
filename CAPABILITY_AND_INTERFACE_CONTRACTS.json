@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "publicProjectionVersion": "v2",
+  "capabilities": [
+    {
+      "name": "create-video-project",
+      "producer": "workflow/factory.ts",
+      "outputs": ["video_plan.md", "script.md", "storyboard.md", "assets/manifest.json", "state.json"],
+      "consumers": ["remotion", "user"],
+      "positiveExample": "制作一个60秒介绍人工智能未来趋势的视频",
+      "negativeExample": "空白主题",
+      "retirementCondition": "替代入口完整接管所有输出并通过端到端契约"
+    },
+    {
+      "name": "render-final-video",
+      "producer": "workflow/factory.ts",
+      "outputs": ["output/final.mp4", "output/final.probe.json"],
+      "consumers": ["user"],
+      "positiveExample": "完整且可渲染的项目",
+      "negativeExample": "缺少 storyboard.md",
+      "retirementCondition": "替代渲染链完成 Remotion、FFmpeg 与 ffprobe 验收"
+    },
+    {
+      "name": "provider-capability-report",
+      "producer": "workflow/providers.ts",
+      "outputs": ["provider", "available", "reason", "requiredEnvironment"],
+      "consumers": ["user", "future-adapters"],
+      "positiveExample": "列出 Flux/Kling/OpenAI Voice 接口状态",
+      "negativeExample": "未配置密钥却报告可用",
+      "retirementCondition": "版本化替代接口覆盖全部 provider"
+    },
+    {
+      "name": "generate-project-voice",
+      "producer": "workflow/voice-agent.ts",
+      "outputs": ["voice/voice.mp3", "voice/metadata.json"],
+      "consumers": ["music-agent", "user"],
+      "positiveExample": "从 script.md 使用显式提供器生成中文旁白",
+      "negativeExample": "缺少 API 密钥却报告云语音成功",
+      "retirementCondition": "替代接口兼容三种 provider 契约并通过音频探测"
+    },
+    {
+      "name": "mix-voice-and-bgm",
+      "producer": "workflow/music-agent.ts",
+      "outputs": ["assets/audio/bgm.mp3", "assets/audio/final-mix.m4a", "assets/audio/music.json"],
+      "consumers": ["ffmpeg", "user"],
+      "positiveExample": "technology 风格，淡入淡出且语音侧链优先",
+      "negativeExample": "无 voice.mp3 时生成假成功混音",
+      "retirementCondition": "替代混音器保持风格、ducking 与响度契约"
+    },
+    {
+      "name": "generate-platform-thumbnails",
+      "producer": "workflow/thumbnail-agent.ts",
+      "outputs": ["output/thumbnails/xiaohongshu.png", "output/thumbnails/douyin.png", "output/thumbnails/youtube.png"],
+      "consumers": ["user", "platform-adapter"],
+      "positiveExample": "一次生成三个已登记尺寸的封面",
+      "negativeExample": "缺少项目规格仍声称完成",
+      "retirementCondition": "替代渲染链覆盖全部平台尺寸并通过 PNG 验证"
+    },
+    {
+      "name": "create-platform-packages",
+      "producer": "workflow/platform-adapters.ts",
+      "outputs": ["platforms/xiaohongshu.json", "platforms/douyin.json", "platforms/youtube.json"],
+      "consumers": ["user", "future-publishers"],
+      "positiveExample": "生成 ready-for-manual-review 的本地发布包",
+      "negativeExample": "没有账号授权时尝试自动发布",
+      "retirementCondition": "经授权的发布器接管并保留本地包审计记录"
+    },
+    {
+      "name": "direct-content-production",
+      "producer": "workflow/content-intelligence/director.ts",
+      "outputs": ["projects/*/director_plan.md", "projects/*/content-intelligence/run.json"],
+      "consumers": ["workflow/factory.ts", "script-agent", "storyboard-agent", "user"],
+      "positiveExample": "将 AI 创业日志主题选择为 personal_ip/build_in_public pipeline",
+      "negativeExample": "未知 pipeline 或空主题仍进入渲染",
+      "retirementCondition": "版本化替代 Director 保持可审计的 pipeline、skill 和任务分配输出"
+    },
+    {
+      "name": "analyze-reference-video",
+      "producer": "workflow/content-intelligence/reference-analyzer.ts",
+      "outputs": ["reference_analysis.md"],
+      "consumers": ["director-agent", "content-strategy-agent", "user"],
+      "positiveExample": "分析本地 MP4 的时长、镜头节奏与视觉事实并给出 A/B/C 三种建议",
+      "negativeExample": "无法读取视频时虚构镜头与传播结论",
+      "retirementCondition": "替代分析器保持事实/推断分离和三方向建议契约"
+    },
+    {
+      "name": "generate-content-strategy",
+      "producer": "workflow/content-intelligence/content-strategy.ts",
+      "outputs": ["content_strategy.md"],
+      "consumers": ["director-agent", "user"],
+      "positiveExample": "从“我的 AI 项目上线”生成 10 个差异化真实选题",
+      "negativeExample": "空主题或虚构用户、收入、效果数据",
+      "retirementCondition": "替代策略器保持十选题与真实性约束"
+    },
+    {
+      "name": "edit-shortform-copy",
+      "producer": "workflow/content-intelligence/copywriter.ts",
+      "outputs": ["copywriter_plan.md"],
+      "consumers": ["script-agent", "voice-agent", "storyboard-agent", "director-agent", "user"],
+      "positiveExample": "保留真实事实，以自然偏快语速计算内容驱动时长，并按题材决定是否需要备选 Hook",
+      "negativeExample": "固定生成三个 Hook、强行填满 60 秒、为了节奏虚构事实或结果",
+      "retirementCondition": "替代编辑器保持动态 Hook、内容定时、事实保护和可审计审校输出"
+    },
+    {
+      "name": "create-local-talking-head-rough-cut",
+      "producer": "workflow/local-rough-cut.ts",
+      "outputs": ["rough-cut/analysis.json", "rough-cut/cut-list.json", "rough-cut/transcript.md", "rough-cut/preview.mp4", "rough-cut/a-roll-rough-cut.mp4"],
+      "consumers": ["editing-agent", "storyboard-agent", "user"],
+      "positiveExample": "从本地手机原始视频生成Whisper文字稿、静音检测、可审查剪辑表和本地粗剪",
+      "negativeExample": "缺少原片或转写失败时上传到云端、依赖ChatCut时间线或报告假成功",
+      "retirementCondition": "替代入口保持完全本地、可审计决策、保守语义策略和FFmpeg媒体验收"
+    }
+    ,
+    {
+      "name": "create-digital-human-video",
+      "producer": "workflow/digital-human/pipeline.ts",
+      "outputs": ["digital-human/voice/voice.mp3", "digital-human/avatar/avatar.mp4", "digital-human/subtitle/captions.json", "digital-human/subtitle/captions.srt", "digital-human/final.mp4", "digital-human/run.json"],
+      "consumers": ["user"],
+      "positiveExample": "使用已有 script.md、Fish Audio 和已授权 HeyGen Avatar 生成知识类竖屏成片",
+      "negativeExample": "缺少密钥、Avatar ID 或付费授权时仍报告成功",
+      "retirementCondition": "替代入口完整接管同一独立产物契约并通过隔离、故障和媒体验收"
+    },
+    {
+      "name": "package-digital-human-video",
+      "producer": "workflow/digital-human/hyperframes.ts",
+      "outputs": ["digital-human/package/index.html", "digital-human/final.mp4"],
+      "consumers": ["digital-human-pipeline", "user"],
+      "positiveExample": "把本地 Avatar MP4 与动态字幕包装为可验收 MP4",
+      "negativeExample": "HyperFrames 不可用时静默切换到电影管线",
+      "retirementCondition": "替代包装器保持 HTML 合成和媒体验收契约"
+    }
+    ,
+    {
+      "name": "render-project-hyperframes-video",
+      "producer": "projects/*/hyperframes/index.html",
+      "outputs": ["projects/*/final.mp4", "projects/*/storyboard.md", "projects/*/asset_list.md", "projects/*/voice_script.md"],
+      "consumers": ["user"],
+      "positiveExample": "使用已登记真实产品截图、独立 AI B-roll 和明确 provider 旁白渲染 9:16 成片",
+      "negativeExample": "生成假的产品 UI，或把本地预览旁白标记为 Fish Audio",
+      "retirementCondition": "替代项目合成入口保持真实素材溯源、HyperFrames 检查和 ffprobe 验收契约"
+    }
+  ],
+  "publicFields": ["schemaVersion", "projectId", "title", "durationSeconds", "aspectRatio", "status", "artifacts", "issues"],
+  "forbiddenPublicFields": ["apiKey", "token", "cookie", "internalScore", "debugTrace"]
+}

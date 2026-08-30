@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Prove that the independent digital-human pipeline does not modify the existing cinematic pipeline.",
+  "files": {
+    "workflow/factory.ts": "73f75e393fa897e17273bbf0653c42260932c8a9776942bd395e36d39072b0f2",
+    "workflow/voice-agent.ts": "3f5b5f86ccd1f94164219a751b2aa26e68cbdb3041a3b61810c39c137d4bce40",
+    "workflow/music-agent.ts": "d2789b44c814ae575ec1ec4f722254657588d072db6f6e9d3dccf2288e8298bb",
+    "workflow/viral-agent.ts": "c413b1c1231a845c3bcbcedfc0fe90bd8f7798d6f7ecf2df337052d09cfacfd8",
+    "workflow/thumbnail-agent.ts": "9d33cbcef5904c69134e6d780a8f0496e9922078d99cc59015b611826f21314d",
+    "workflow/platform-adapters.ts": "fda572a537166722938377bc8490ab6fea47d677c715a285b5042ffff242105e",
+    "remotion/src/FactoryVideo.tsx": "d55b6193984469329ee3d85199ce3298eb4cda2bd4d8b58c158790f75aba94f2",
+    "remotion/src/Root.tsx": "5287067baa8fb4e622ab89a72eafdbcd192bb8f6c63ad757f73306bf4677d2b0",
+    "ffmpeg/finalize.ps1": "4b844306a7ab04c099ae13a5306be4898adc6a3a07faa4c94483e24af5c4a2b0"
+  }
+}

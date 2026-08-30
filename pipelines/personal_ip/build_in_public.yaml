@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "personal_ip/build_in_public",
+  "videoType": "创业日志",
+  "contentGoal": "公开记录 AI 产品从开发到验证的真实成长过程，而不是制作产品广告。",
+  "platforms": ["抖音", "小红书", "YouTube"],
+  "durationOptions": [30, 60, 180],
+  "durationPolicy": {"mode":"content-driven","minSeconds":20,"maxSeconds":180,"defaultTargetSeconds":45,"targetCharactersPerSecond":5.0},
+  "skills": ["personal_ip", "viral_video", "cinematic_video", "shortform_copywriting"],
+  "template": "existing-personal-ip-template",
+  "fixedStructure": ["Hook", "项目背景", "当前进展", "产品展示", "问题", "下一步计划"],
+  "stages": [
+    {"id":"direct","agent":"Director Agent","goal":"选择内容结构、发布画幅、镜头策略与真实性约束","inputs":["用户主题"],"outputs":["director_plan.md"],"review":["只讲一个核心问题","事实与计划分开","横竖屏在拍摄前确定"]},
+    {"id":"script","agent":"Script Agent","goal":"按第一人称真实记录组织旁白和拍摄段落","inputs":["director_plan.md"],"outputs":["voice_script.md"],"review":["不夸大结果","Hook 在前三秒且正文兑现","每段只表达一个意思"]},
+    {"id":"copyedit","agent":"Copywriter Agent","goal":"以自然偏快口语审校文案并按内容建议时长","inputs":["voice_script.md"],"outputs":["copywriter_plan.md"],"review":["Hook 数量由内容决定","删除空话但不改事实","不强行凑整时长"]},
+    {"id":"assets","agent":"Asset Agent","goal":"登记手机原片、产品素材、技术属性和隐私风险","inputs":["copywriter_plan.md"],"outputs":["asset_plan.md"],"review":["原片可溯源","HDR/方向/音轨已检查","缺口不伪造"]},
+    {"id":"rough_cut","agent":"Editing Agent","goal":"先完成仅含真实人物口播的 A-roll 粗剪","inputs":["手机原始素材","asset_plan.md"],"outputs":["a-roll-rough-cut.mp4"],"review":["删除口误重复与长停顿","色彩统一","无黑帧和异常静音"]},
+    {"id":"product_capture","agent":"Asset Agent","goal":"按已确认 A-roll 时间线录制和登记真实产品操作","inputs":["a-roll-rough-cut.mp4"],"outputs":["product-timeline.md","assets/product/"],"review":["操作与口播顺序一致","只使用真实产品","隐私字段已登记"]},
+    {"id":"transcribe","agent":"Editing Agent","goal":"对确认后的 A-roll 生成并校正统一字幕时间线","inputs":["a-roll-rough-cut.mp4"],"outputs":["subtitle.srt"],"review":["专有名词人工校正","字幕与人物及录屏使用同一全局时间线"]},
+    {"id":"storyboard","agent":"Storyboard Agent","goal":"将粗剪、字幕和产品操作映射为可执行的内容段落","inputs":["copywriter_plan.md","product-timeline.md","subtitle.srt"],"outputs":["storyboard.md"],"review":["每段有素材依据","无假 UI","人物版式由内容段落决定"]},
+    {"id":"treatment_sample","agent":"Packaging Agent","goal":"先制作包含人物、录屏、字幕和一次切换的短视觉样片","inputs":["storyboard.md","asset_plan.md"],"outputs":["previews/visual-treatment-sample.mp4"],"review":["人物裁切正确","录屏可读","转场无双影","样片通过后才允许全片渲染"]},
+    {"id":"package","agent":"Packaging Agent","goal":"按已确认样片组合字幕、信息卡片、隐私遮罩和克制转场","inputs":["storyboard.md","subtitle.srt","previews/visual-treatment-sample.mp4"],"outputs":["render-ready project"],"review":["同一版式至少保持8-15秒","分段素材沿用全局trimBefore","真实素材优先"]},
+    {"id":"render","agent":"Render Agent","goal":"调用现有 Remotion/FFmpeg 生成无 BGM 高质量母版","inputs":["render-ready project"],"outputs":["final-clean.mp4"],"review":["1920x1080/30fps/H.264/AAC合格","旁白响度合格","视频流避免二次编码"]},
+    {"id":"publish_kit","agent":"Publishing Agent","goal":"在成片锁定后生成标题、简介、话题标签和可选配乐版；个人 IP 默认不生成封面","inputs":["final-clean.mp4"],"outputs":["publish-kit.md"],"review":["BGM 不覆盖唯一母版","默认无开头/结尾封面","平台适配不改事实"]}
+  ]
+}

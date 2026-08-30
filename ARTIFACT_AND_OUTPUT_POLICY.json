@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "roots": {
+    "formal": ["projects/*/video_plan.md", "projects/*/script.md", "projects/*/storyboard.md", "projects/*/asset_list.md", "projects/*/asset_plan.md", "projects/*/voice_script.md", "projects/*/director_plan.md", "projects/*/content_strategy.md", "projects/*/reference_analysis.md", "projects/*/content-intelligence/run.json", "projects/*/output/final.mp4", "projects/*/output/thumbnails/*.png", "projects/*/final.mp4", "projects/*/voice/voice.mp3", "projects/*/platforms/*.json", "projects/*/digital-human/voice/voice.mp3", "projects/*/digital-human/avatar/avatar.mp4", "projects/*/digital-human/subtitle/captions.json", "projects/*/digital-human/subtitle/captions.srt", "projects/*/digital-human/final.mp4", "projects/*/digital-human/run.json"],
+    "rebuildable": ["projects/*/output/remotion.mp4", "projects/*/output/render-props.json", "projects/*/output/thumbnail-props.json", "node_modules/**", ".venv/**", "playwright-browsers/**", ".cache/**"],
+    "temporary": [".tmp/**"]
+  },
+  "budgets": {
+    "maxVisibleToolBytes": 1000000,
+    "largeFileThresholdBytes": 10000000,
+    "maxSessionEventBytes": 5000000,
+    "maxFinalVideoBytes": 250000000
+  },
+  "summaryFields": ["path", "bytes", "sha256", "durationSeconds", "codec", "resolution"],
+  "cleanupEntry": "pnpm clean:temp",
+  "retention": {"formal":"until user removes it","temporary":"end of task","rebuildable":"on demand"}
+}

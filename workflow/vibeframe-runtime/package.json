@@ -1,0 +1,9 @@
+{
+  "name": "ai-video-factory-vibeframe-runtime",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Isolated VibeFrame CLI runtime; optional Kokoro TTS is omitted because Whisper is the v1 speech dependency",
+  "dependencies": {
+    "@vibeframe/cli": "0.115.2"
+  }
+}

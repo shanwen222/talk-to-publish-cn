@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "product_video/launch",
+  "videoType": "产品视频",
+  "contentGoal": "用真实产品演示连接用户痛点、功能证据与行动入口。",
+  "platforms": ["抖音", "小红书", "YouTube"],
+  "durationOptions": [30, 60],
+  "durationPolicy": {"mode":"content-driven","minSeconds":15,"maxSeconds":90,"defaultTargetSeconds":35,"targetCharactersPerSecond":4.8},
+  "skills": ["product_launch", "cinematic_video", "viral_video", "shortform_copywriting"],
+  "template": "existing-product-template",
+  "fixedStructure": ["痛点 Hook", "产品定位", "真实演示", "核心收益", "证据", "CTA"],
+  "stages": [
+    {"id":"direct","agent":"Director Agent","goal":"确定受众与证明路径","inputs":["用户主题"],"outputs":["director_plan.md"],"review":["不虚构能力"]},
+    {"id":"script","agent":"Script Agent","goal":"建立痛点到功能的对应关系","inputs":["director_plan.md"],"outputs":["script.md"],"review":["收益有证据"]},
+    {"id":"copyedit","agent":"Copywriter Agent","goal":"删除发布会腔并按真实证明材料确定口播长度","inputs":["script.md"],"outputs":["copywriter_plan.md"],"review":["不虚构收益","Hook 候选按需要生成","单一 CTA"]},
+    {"id":"assets","agent":"Asset Agent","goal":"登记真实产品录屏","inputs":["copywriter_plan.md"],"outputs":["asset_plan.md"],"review":["真实 UI"]},
+    {"id":"render","agent":"Render Agent","goal":"调用现有视频流水线","inputs":["asset_plan.md"],"outputs":["final.mp4"],"review":["演示清晰"]}
+  ]
+}

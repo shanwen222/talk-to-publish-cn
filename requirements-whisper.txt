@@ -1,0 +1,3 @@
+# The project uses this isolated Python environment only for local Whisper transcription.
+# The first setup downloads PyTorch and the selected Whisper model, so it may take a while.
+openai-whisper==20250625
