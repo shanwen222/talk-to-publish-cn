@@ -59,6 +59,8 @@ task directory or a copied Skill folder.
 - **右侧信息必须有意义**：默认使用简短、悬浮的语义标签。禁止没有语义的常驻 radar/scanner/旋转 HUD；若使用雷达，必须说明它表达的关系或数据。
 - **拒绝稿要隔离**：失败成片只能作为对照。新方案创建新的 `redo/vN` 或独立 composition，不在失败底稿上打补丁。
 - **全局规则要回归**：样片通过后，逐一盘点全片所有流程框、时间线、对比组和数字卡，不能只在样片某一处生效。
+- **提交前做隐私扫描**：运行 `npm run security:validate` 扫描工作区和全部 Git 历史；不要提交密钥、Cookie、个人素材、转写稿或本机路径。
+- **只暂存明确文件**：禁止 `git add .` 和 `git add -A`。使用 `git add -- <明确的文件路径>`，再检查 `git diff --cached`，避免把临时素材、凭据或个人资料带入公开仓库。
 
 ## 工作流 / Workflow
 
@@ -72,6 +74,7 @@ task directory or a copied Skill folder.
 8. **全组件回归**：全片渲染前列出每个 flow-like group；标注 `dynamic-with-cues`、`static-by-design` 或 `structural-sequence`。动态组至少检查 all-visible、first-focus、middle-focus、final-focus。参考 [regression-and-qa.md](references/regression-and-qa.md)。
 9. **渲染与合成**：先跑 HyperFrames lint/check/inspect/render，再用 Remotion 合成视觉轨、原音频和 Whisper 字幕。默认 1920×1080/30fps、H.264/AAC，除非用户另有要求。详细命令见 [rendering.md](references/rendering.md)。
 10. **人工 QA 与交付**：检查全分辨率关键帧、转场、字幕、脸/标题/字幕安全区、透明度、手机缩略图和媒体规格；更新 `WORK_PROGRESS.md`、`USER_FEEDBACK_LOG.md`、事故/经验记录和 source manifest，再交付文件路径与真实规格。不要自动对外发布。
+11. **发布安全门禁**：公开仓库前运行 `npm run security:validate`。首次克隆后运行 `npm run security:install-hook`（`setup.ps1` 会自动执行），让每次 `git push` 都先扫描完整历史；CI 也会重复检查。
 
 ## 参考资料 / References
 

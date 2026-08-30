@@ -17,3 +17,5 @@ jobs:
           python-version: '3.11'
       - name: Validate skill package
         run: python scripts/validate_skill.py
+      - name: Scan repository history for private data
+        run: python scripts/validate_repository.py

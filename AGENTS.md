@@ -44,6 +44,7 @@
 - 所有写入项目产物的工作流命令自动获取 `.governance/project-leases/<project-id>.json` 项目租约；同一项目不能被两个会话同时写入，不同项目可以并行。租约异常残留时使用 `npm run factory -- lease --project projects/<id> --action status|release --force` 处理。
 - 不覆盖用户或其他任务的未提交更改。
 - 配置与密钥分离；仓库只允许提交 `.env.example`。
+- 公开提交前必须运行 `npm run security:validate`；禁止 `git add .` / `git add -A`，只暂存明确的文件路径并检查 `git diff --cached`。
 - `projects/<project-id>/output/`、缓存、模型权重与浏览器二进制是可重建产物，不是权威源；视频任务不得写入共享根目录 `output/`。
 - 禁止保留 `backup`、`final-copy`、`current`、`tmp` 等候选实现。
 

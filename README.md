@@ -65,6 +65,32 @@ HyperFrames/GSAP 和 Remotion 是核心执行引擎，和 FFmpeg、Whisper、Chr
 
 完整环境说明见 [ENVIRONMENT.md](ENVIRONMENT.md)。
 
+## 公开仓库安全门禁
+
+这个仓库会被公开克隆，安全扫描是正常工作流的一部分，不是出问题后的补救：
+
+```powershell
+# 扫描工作区、未忽略文件和全部 Git 历史
+npm run security:validate
+
+# 只检查当前暂存区（提交前快速检查）
+python scripts/check_sensitive.py --staged
+
+# 如果仓库是 Git clone，安装版本化 pre-push hook
+npm run security:install-hook
+```
+
+扫描会拦截密钥、令牌、私钥、个人路径、常见联系方式、个人素材文件和可疑截图/录音文件名，并且只输出脱敏位置，不打印秘密原文。GitHub Actions 会在 push 和 pull request 上再次扫描完整历史。
+
+提交时严禁使用 `git add .` 或 `git add -A`。请只暂存本次明确要提交的文件，例如：
+
+```powershell
+git add -- README.md SKILL.md scripts/check_sensitive.py
+git diff --cached
+```
+
+视频、截图、原始转写和本机项目产物应留在仓库外；如果确有授权的通用资产，也要先确认许可证和手机端展示需求。发现误提交时，先撤销/轮换凭据，再按 [SECURITY.md](SECURITY.md) 处理历史清理。
+
 ## 为什么需要它？
 
 普通的 AI 剪辑很容易出现几个问题：
@@ -254,6 +280,7 @@ talk-to-publish-cn/
 
 ```powershell
 python scripts/validate_skill.py
+npm run security:validate
 ```
 
 ### HyperFrames

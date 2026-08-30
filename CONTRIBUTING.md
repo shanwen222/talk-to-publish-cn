@@ -10,6 +10,7 @@
 4. 运行 `python scripts/validate_skill.py`。
 5. 运行 `npm ci`、`npm run build` 和 `npm test` 验证合并后的运行时。
 6. 优先更新对应 reference 文件，不要在多处复制同一条规则。
+7. 提交前运行 `python scripts/check_sensitive.py --staged` 和 `npm run security:validate`；只暂存明确文件，禁止 `git add .` / `git add -A`。
 
 请在 PR 中说明：用户问题、改动的工作流规则、验证方法。
 

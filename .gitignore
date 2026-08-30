@@ -9,6 +9,7 @@ Thumbs.db
 .cache/
 node_modules/
 .venv/
+__pycache__/
 workflow/**/node_modules/
 playwright-browsers/
 .governance/leases/
