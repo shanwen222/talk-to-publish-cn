@@ -11,9 +11,10 @@
 
 1. 当前用户对本期视频的明确要求；
 2. 用户已确认的 `previous-editorial-v1` 往期视觉基线；
-3. `docs/approved-visual-baseline.md` 与 `docs/approved-visual-standard.md`；
-4. 本项目 `DESIGN.md` 的语义方案；
-5. 通用排版和动效默认值。
+3. 用户已确认的 `previous-editorial-v1-layout` 往期版式锚点；
+4. `docs/approved-visual-baseline.md` 与 `docs/approved-visual-standard.md`；
+5. 本项目 `DESIGN.md` 的语义方案；
+6. 通用排版和动效默认值。
 
 项目设计不能静默覆盖已确认的视觉基线。确需偏离时，必须在项目记录中写明偏离原因、用户确认和新的回归帧。
 
@@ -48,6 +49,7 @@ python scripts/iteration_preflight.py --project <project-dir> --phase start
 
 - `iteration-system: loaded`；
 - `style-profile: previous-editorial-v1`（或记录用户确认的例外）；
+- `layout-profile: previous-editorial-v1-layout`（或记录用户确认的例外）；
 - 每个场景的入口方式、口播 cue、当前高亮、退出点和字幕安全区；
 - 每个流程组是 `dynamic-with-cues`、`structural-sequence` 还是 `static-by-design`。
 - 若存在三步 Hook，登记 `rhythm-profile: hook-structure-focus-v1`；否则登记 `rhythm-profile: none`。
@@ -79,7 +81,7 @@ python scripts/iteration_preflight.py --project <project-dir> --phase render
 
 这是本用户已确认的个人 IP 横屏口播默认风格。它不是“凭感觉像往期”，而是必须满足的可观察规则：
 
-- **字幕**：主字幕 62–72px，中文优先 Microsoft YaHei / DengXian；白字、深色描边与阴影；单行过长时拆成两行，不缩回小字。
+- **字幕**：主字幕 68–74px（1920×1080 默认 74px），中文优先 Microsoft YaHei / DengXian；白字、深色描边与阴影；单行过长时拆成两行，不缩回小字。
 - **关键词**：当前口播中的主题词使用品牌黄色高亮，可配轻微放大或短脉冲；不额外复制成第二套解释文字。
 - **加载式入场**：旁白明确列举的步骤、动作或标题按语义顺序出现，使用淡入、擦入、裁切 reveal 或轻微位移；间隔通常 0.30–0.60 秒。结构需要先整体可见时，仍必须为当前步骤提供独立 cue/highlight。
 - **三步 Hook 节奏**：先建立顶部标题、语义信息栏和三步卡片的整体骨架；随后按口播 cue 逐项聚焦。当前卡片轻微放大（约 1.06–1.12 倍）并切换为黄色重点，非当前卡片保持可读但降低强调；底部大字幕与当前关键词同步高亮。焦点切换时保持同一版式，不重置、不闪回、不复制一行解释性大字。
@@ -88,6 +90,20 @@ python scripts/iteration_preflight.py --project <project-dir> --phase render
 - **蒙版硬规则**：蒙版启用时，人物鼻子对准圆心，容器固定在安全区；默认不使用黄色/青色圆环，只保留柔和阴影；内部视频顶端归零并裁切在容器内，不能露顶部黑边；全屏人物与蒙版必须使用同一条逐帧同步的视频源，避免 60fps 源片在 30fps 输出中双 `<video>` 解码造成高频抖动；蒙版从素材段开始到结束（包括转场）持续存在，不中途切回全屏。
 - **信息栏**：卡片、线框、编号和短标签只表达当前结构；禁止用密集小字代替口播，也禁止为了“科技感”添加无语义雷达、扫描线或黄色调试框。
 - **优先级**：人物主体 > 口播字幕 > 场景主标题 > 主题牌 > 证据细节 > 装饰。
+
+## 往期版式锚点：`previous-editorial-v1-layout`
+
+这是 `previous-editorial-v1` 的几何基线，解决“风格相似但文字位置漂移”的问题。适用于 1920×1080 横屏；其他 16:9 尺寸按宽高比例等比换算，不能重新凭感觉选角落。
+
+- **外框与进度**：外框 inset 34px；顶部基准线约 y=27px；进度条沿顶部贯穿，不改变标题的 y 锚点。
+- **品牌眉标与主标题**：眉标 x=60px、y=52px、高度约 39px；主标题 x=60px、y=111px、宽度约 1000px，字号 82px 以上；副标题字号约 30px；下划线从同一 x 锚点展开，宽度约 350px。
+- **主信息栏**：默认 x=60px、y=330px、宽度约 900px；标题字号 59px 以上，卡片标题/节点字号 31–37px 以上。三步或对比结构优先在同一信息栏内建立阅读关系，不得无理由拆到画面中线或顶住边缘。
+- **右上主题牌**：默认 right=88px、top=84px、宽度约 390px；只放当前语义标签，不压人物脸，也不与主标题抢层级。
+- **字幕安全带**：默认 left/right=120px、bottom=30px、最大宽度约 1750px、字号 74px；字幕层高于素材和信息栏，任何底部卡片都必须让出该区域。
+- **持续性**：主标题、信息栏和主题牌默认沿用同一组锚点；只有明确的全屏章节页或用户指定例外才允许隐藏/重排，并在 `DESIGN.md` 写明原因和回归帧。
+- **用户标注优先**：用户给出的红框、留白区或明确位置高于本 profile；profile 只负责在没有明确标注时提供默认锚点，不能反过来覆盖用户位置。
+
+版式回归至少抽查主标题、信息栏、字幕和一个人物画面的 settled frame；记录实际 x/y/字号与 profile 的偏差。偏差超过约 4% 且没有用户明确理由时，不能标记 `final`。
 
 ## `hook-structure-focus-v1` 验收清单
 
@@ -99,6 +115,16 @@ python scripts/iteration_preflight.py --project <project-dir> --phase render
 - [ ] 当前卡片放大/变黄/短脉冲与底部关键词高亮同步；
 - [ ] 步骤卡片与字幕不在同一行重叠，人物脸和嘴不被遮挡；
 - [ ] 至少抽查首个焦点、中间焦点和最终焦点三帧，手机缩略图仍能读清。
+
+## 版式锚点回归清单
+
+适用于 `layout-profile: previous-editorial-v1-layout`：
+
+- [ ] 主标题、眉标、副标题和下划线保持同一左锚点，未因加入/删除标签而整体上移或下移；
+- [ ] 主信息栏仍位于左侧信息区，三步/对比卡片没有无理由跨到中线或顶住边缘；
+- [ ] 右上主题牌保持语义悬浮，未变成常驻大面板或遮挡人物；
+- [ ] 字幕保持在 bottom=30px 附近的大字安全带，未被素材、卡片或蒙版抬高/覆盖；
+- [ ] 至少抽查一个开头帧、一个信息段帧和一个结尾帧，记录与锚点的实际偏差。
 
 ## 蒙版回归清单
 

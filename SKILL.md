@@ -54,6 +54,7 @@ task directory or a copied Skill folder.
 - **保存证据链**：保留 raw Whisper JSON/SRT/TSV/VTT/TXT；所有非平凡修订写入 `caption-corrections.json`，并记录 `audioVerified: true` 的听音依据。
 - **先审计再剪辑**：先用实际视频生成一轮字幕并做重复审计，再决定是否删除重复句；参考文案不能代替这一轮真实转写。
 - **强制加载迭代系统**：每个中文真人口播视频任务开始前，必须读取 `references/iteration-system.md`、`docs/production-lessons.md`、`docs/approved-visual-baseline.md`、`docs/approved-visual-standard.md` 和 `docs/transcript-fidelity-standard.md`，并运行 `python scripts/iteration_preflight.py --project <project-dir> --phase start`。未生成 `iteration-context.json` 不得进入视觉包装或渲染。
+- **强制继承版式锚点**：默认登记 `layout-profile: previous-editorial-v1-layout`，按 1920×1080 锚点等比换算主标题、信息栏、主题牌和字幕安全带；用户红框/明确位置优先于 profile，不能自行改成另一套布局。
 - **先做语义设计**：信息层展示流程、关系、结构和少量关键数字，不把整段口播变成密密麻麻的小字。
 - **动效要跟语义走**：每个流程组必须在 scene table 中声明 `dynamic-with-cues`、`structural-sequence` 或 `static-by-design`。启用默认 `previous-editorial-v1` 时，旁白明确列举的步骤采用顺序加载/错峰入场；若结构需要整体可见，仍须用独立 cue 做当前项高亮。`entrance` 与 `focus` 必须是两个独立状态。
 - **三步 Hook 必须复用节奏模板**：开头出现三个或以上并列动作/步骤时，`DESIGN.md` 必须登记 `rhythm-profile: hook-structure-focus-v1`，按“整体骨架 → 当前项聚焦 → 字幕关键词同步”的节奏执行，并抽查首个/中间/最终焦点状态。不得凭通用 `stagger` 或静态卡片替代。
@@ -70,7 +71,7 @@ task directory or a copied Skill folder.
 1. **检查与登记输入**：确认源视频、时长、画幅、音频、参考文案、截图/产品素材和输出路径；保留原始文件，先读项目的设计与反馈记录。
 2. **识别真实口播**：运行项目 Whisper 入口，保存 raw transcript；从这轮视频生成字幕后运行重复审计，识别整句重复、长句内重复和近似重录。只删除音频后的幻觉段，并生成字幕一致性报告：时间戳来源、真实听到的文字、参考文案修订分别列出。
 3. **可选粗剪**：用户要去停顿、重复句、明显废话时，按 [rough-cut.md](references/rough-cut.md) 执行；先完成字幕重复审计，确认重复时默认优先保留后一句；最终结尾默认保留约 0.5 秒缓冲。用户要求保留原 A-roll 时跳过，但在项目记录中明确 `rough-cut: skipped`。
-4. **先做语义方案**：编写 `DESIGN.md` 和逐段 scene table，记录口播意思、视觉结构、使用理由、入场、口播 cue、高亮、退出、安全区和手机优先级；登记 `iteration-system: loaded`、采用的 style profile、`rhythm-profile` 和 `mask-profile`。参考 [semantic-design.md](references/semantic-design.md) 与 [iteration-system.md](references/iteration-system.md)。
+4. **先做语义方案**：编写 `DESIGN.md` 和逐段 scene table，记录口播意思、视觉结构、使用理由、入场、口播 cue、高亮、退出、安全区和手机优先级；登记 `iteration-system: loaded`、采用的 style profile、`layout-profile`、`rhythm-profile` 和 `mask-profile`。参考 [semantic-design.md](references/semantic-design.md) 与 [iteration-system.md](references/iteration-system.md)。
 5. **建立隔离版本**：旧版本保留；只把需要的媒体和锁定依赖复制到新的 composition/redo 目录，绝不拿被否定的成片当新底稿。
 6. **制作 HyperFrames 层**：先搭 end-state，再用确定性的 GSAP 入场和语义转场。进度条只在能帮助节奏时使用；流程组件用数据驱动，保证同一条已确认规则能覆盖全片。
 7. **默认先出短样片**：渲染 5–30 秒，至少包含一个复杂流程组、一次字幕 cue、一个语义侧标和一次人物安全检查。用户明确跳过样片时，仍要内部抽关键帧做 QA。

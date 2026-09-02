@@ -68,7 +68,7 @@ for dependency in manifest["dependencies"]:
 if not any(dependency.get("required") is True for dependency in manifest["dependencies"]):
     fail("dependency manifest must contain at least one required entry")
 
-for marker in ("blocked_by_dependencies", "hyperframes:hyperframes", "hyperframes:gsap", "remotion:remotion-best-practices", "iteration_preflight.py", "iteration-system.md"):
+for marker in ("blocked_by_dependencies", "hyperframes:hyperframes", "hyperframes:gsap", "remotion:remotion-best-practices", "iteration_preflight.py", "iteration-system.md", "layout-profile"):
     if marker not in text:
         fail(f"mandatory capability gate marker is missing: {marker}")
 

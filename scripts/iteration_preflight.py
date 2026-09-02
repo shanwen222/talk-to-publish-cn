@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONTEXT_NAME = "iteration-context.json"
 STYLE_PROFILE = "previous-editorial-v1"
+LAYOUT_PROFILE = "previous-editorial-v1-layout"
 REQUIRED_SOURCES = (
     "SKILL.md",
     "docs/production-lessons.md",
@@ -79,6 +80,8 @@ def assert_context_current(project: Path, sources: dict[str, dict[str, str]]) ->
         fail("unsupported iteration context schema")
     if context.get("styleProfile") != STYLE_PROFILE:
         fail(f"style profile must be {STYLE_PROFILE}")
+    if context.get("layoutProfile") != LAYOUT_PROFILE:
+        fail(f"layout profile must be {LAYOUT_PROFILE}")
     recorded = context.get("loadedSources")
     if recorded != sources:
         fail("experience sources changed or were not loaded again; rerun --phase start")
@@ -100,11 +103,13 @@ def start(project: Path, sources: dict[str, dict[str, str]]) -> None:
         "schemaVersion": "iteration-context-v1",
         "project": project.relative_to(ROOT).as_posix(),
         "styleProfile": STYLE_PROFILE,
+        "layoutProfile": LAYOUT_PROFILE,
         "loadedAt": datetime.now(timezone.utc).isoformat(),
         "loadedSources": sources,
         "priority": [
             "explicit-user-request",
             STYLE_PROFILE,
+            LAYOUT_PROFILE,
             "approved-visual-baseline",
             "approved-visual-standard",
             "project-design",
@@ -112,6 +117,7 @@ def start(project: Path, sources: dict[str, dict[str, str]]) -> None:
         ],
         "mandatoryChecks": [
             "large-caption",
+            "layout-anchor-grid",
             "keyword-highlight",
             "narration-reveal",
             "hook-structure-focus-when-structured-hook",
@@ -150,6 +156,7 @@ def main() -> None:
         (
             "iteration-system: loaded",
             "style-profile: previous-editorial-v1",
+            "layout-profile: previous-editorial-v1-layout",
             "rhythm-profile:",
             "mask-profile:",
         ),
@@ -160,6 +167,7 @@ def main() -> None:
         (
             "iteration-system: loaded",
             "style-profile: previous-editorial-v1",
+            "layout-profile: previous-editorial-v1-layout",
             "rhythm-profile:",
             "mask-profile:",
         ),
