@@ -34,7 +34,8 @@
     "playwright:check": "playwright test",
     "vibe:doctor": "node workflow/vibeframe-wrapper.mjs doctor",
     "vibe:dry-run": "node workflow/vibeframe-wrapper.mjs build . --dry-run --max-cost 0 --json",
-    "clean:temp": "node scripts/governance/clean-temp.mjs"
+    "clean:temp": "node scripts/governance/clean-temp.mjs",
+    "iteration:preflight": "python scripts/iteration_preflight.py"
   },
   "dependencies": {
     "@remotion/captions": "4.0.499",

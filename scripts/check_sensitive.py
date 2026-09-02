@@ -31,6 +31,7 @@ IGNORED_PARTS = {
     ".venv",
     "__pycache__",
     "node_modules",
+    "projects",
     "playwright-browsers",
     "output",
     "renders",

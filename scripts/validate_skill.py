@@ -44,7 +44,9 @@ for required_file in [
     "scripts/doctor.ps1",
     "scripts/doctor.mjs",
     "scripts/whisper.ps1",
+    "scripts/iteration_preflight.py",
     "references/dependencies.json",
+    "references/iteration-system.md",
 ]:
     if not (ROOT / required_file).exists():
         fail(f"runtime file is missing: {required_file}")
@@ -66,7 +68,7 @@ for dependency in manifest["dependencies"]:
 if not any(dependency.get("required") is True for dependency in manifest["dependencies"]):
     fail("dependency manifest must contain at least one required entry")
 
-for marker in ("blocked_by_dependencies", "hyperframes:hyperframes", "hyperframes:gsap", "remotion:remotion-best-practices"):
+for marker in ("blocked_by_dependencies", "hyperframes:hyperframes", "hyperframes:gsap", "remotion:remotion-best-practices", "iteration_preflight.py", "iteration-system.md"):
     if marker not in text:
         fail(f"mandatory capability gate marker is missing: {marker}")
 
@@ -78,6 +80,7 @@ ignored_dirs = {
     ".git",
     ".venv",
     "node_modules",
+    "projects",
     "output",
     "renders",
     "test-results",
@@ -86,9 +89,14 @@ ignored_dirs = {
     ".tmp",
     "tmp",
 }
+ignored_path_prefixes = {
+    ("remotion", "public"),
+}
 for path in ROOT.rglob("*"):
     relative_parts = path.relative_to(ROOT).parts
     if any(part in ignored_dirs for part in relative_parts):
+        continue
+    if any(relative_parts[: len(prefix)] == prefix for prefix in ignored_path_prefixes):
         continue
     if path.is_file() and path.stat().st_size > 10 * 1024 * 1024:
         fail(f"unexpected large file: {path.relative_to(ROOT)}")

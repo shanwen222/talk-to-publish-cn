@@ -53,8 +53,11 @@ task directory or a copied Skill folder.
 - **口播是真实来源**：用户给的文案只能作 reference，用来核对专有名词、数字和低置信度 ASR，不得整段替换真实口播。
 - **保存证据链**：保留 raw Whisper JSON/SRT/TSV/VTT/TXT；所有非平凡修订写入 `caption-corrections.json`，并记录 `audioVerified: true` 的听音依据。
 - **先审计再剪辑**：先用实际视频生成一轮字幕并做重复审计，再决定是否删除重复句；参考文案不能代替这一轮真实转写。
+- **强制加载迭代系统**：每个中文真人口播视频任务开始前，必须读取 `references/iteration-system.md`、`docs/production-lessons.md`、`docs/approved-visual-baseline.md`、`docs/approved-visual-standard.md` 和 `docs/transcript-fidelity-standard.md`，并运行 `python scripts/iteration_preflight.py --project <project-dir> --phase start`。未生成 `iteration-context.json` 不得进入视觉包装或渲染。
 - **先做语义设计**：信息层展示流程、关系、结构和少量关键数字，不把整段口播变成密密麻麻的小字。
-- **动效要跟语义走**：流程框可以一起出现，再根据口播把当前步骤高亮；不要把“高亮时间线”误做成“流程框逐个生成”。`entrance` 与 `focus` 必须是两个独立状态。
+- **动效要跟语义走**：每个流程组必须在 scene table 中声明 `dynamic-with-cues`、`structural-sequence` 或 `static-by-design`。启用默认 `previous-editorial-v1` 时，旁白明确列举的步骤采用顺序加载/错峰入场；若结构需要整体可见，仍须用独立 cue 做当前项高亮。`entrance` 与 `focus` 必须是两个独立状态。
+- **三步 Hook 必须复用节奏模板**：开头出现三个或以上并列动作/步骤时，`DESIGN.md` 必须登记 `rhythm-profile: hook-structure-focus-v1`，按“整体骨架 → 当前项聚焦 → 字幕关键词同步”的节奏执行，并抽查首个/中间/最终焦点状态。不得凭通用 `stagger` 或静态卡片替代。
+- **蒙版必须登记并回归**：使用人物蒙版时，`DESIGN.md`/`QA.md` 必须登记 `mask-profile: centered-nose-shadow-only`；人物鼻子对准圆心、默认只保留阴影、内部视频顶端归零无黑边；全屏与蒙版使用同一条逐帧同步视频源，素材切换和翻页期间蒙版不断。未使用蒙版也要登记 `mask-profile: none`，不得让执行层自行猜测。
 - **人物是 A-roll 主体**：不长期挡脸、嘴、标题或字幕安全区；叠层保持通透，手机缩略图仍能读到主标题、关键数字和当前重点。
 - **右侧信息必须有意义**：默认使用简短、悬浮的语义标签。禁止没有语义的常驻 radar/scanner/旋转 HUD；若使用雷达，必须说明它表达的关系或数据。
 - **拒绝稿要隔离**：失败成片只能作为对照。新方案创建新的 `redo/vN` 或独立 composition，不在失败底稿上打补丁。
@@ -67,13 +70,13 @@ task directory or a copied Skill folder.
 1. **检查与登记输入**：确认源视频、时长、画幅、音频、参考文案、截图/产品素材和输出路径；保留原始文件，先读项目的设计与反馈记录。
 2. **识别真实口播**：运行项目 Whisper 入口，保存 raw transcript；从这轮视频生成字幕后运行重复审计，识别整句重复、长句内重复和近似重录。只删除音频后的幻觉段，并生成字幕一致性报告：时间戳来源、真实听到的文字、参考文案修订分别列出。
 3. **可选粗剪**：用户要去停顿、重复句、明显废话时，按 [rough-cut.md](references/rough-cut.md) 执行；先完成字幕重复审计，确认重复时默认优先保留后一句；最终结尾默认保留约 0.5 秒缓冲。用户要求保留原 A-roll 时跳过，但在项目记录中明确 `rough-cut: skipped`。
-4. **先做语义方案**：编写 `DESIGN.md` 和逐段 scene table，记录口播意思、视觉结构、使用理由、入场、口播 cue、高亮、退出、安全区和手机优先级。参考 [semantic-design.md](references/semantic-design.md)。
+4. **先做语义方案**：编写 `DESIGN.md` 和逐段 scene table，记录口播意思、视觉结构、使用理由、入场、口播 cue、高亮、退出、安全区和手机优先级；登记 `iteration-system: loaded`、采用的 style profile、`rhythm-profile` 和 `mask-profile`。参考 [semantic-design.md](references/semantic-design.md) 与 [iteration-system.md](references/iteration-system.md)。
 5. **建立隔离版本**：旧版本保留；只把需要的媒体和锁定依赖复制到新的 composition/redo 目录，绝不拿被否定的成片当新底稿。
 6. **制作 HyperFrames 层**：先搭 end-state，再用确定性的 GSAP 入场和语义转场。进度条只在能帮助节奏时使用；流程组件用数据驱动，保证同一条已确认规则能覆盖全片。
 7. **默认先出短样片**：渲染 5–30 秒，至少包含一个复杂流程组、一次字幕 cue、一个语义侧标和一次人物安全检查。用户明确跳过样片时，仍要内部抽关键帧做 QA。
 8. **全组件回归**：全片渲染前列出每个 flow-like group；标注 `dynamic-with-cues`、`static-by-design` 或 `structural-sequence`。动态组至少检查 all-visible、first-focus、middle-focus、final-focus。参考 [regression-and-qa.md](references/regression-and-qa.md)。
-9. **渲染与合成**：先跑 HyperFrames lint/check/inspect/render，再用 Remotion 合成视觉轨、原音频和 Whisper 字幕。默认 1920×1080/30fps、H.264/AAC，除非用户另有要求。详细命令见 [rendering.md](references/rendering.md)。
-10. **人工 QA 与交付**：检查全分辨率关键帧、转场、字幕、脸/标题/字幕安全区、透明度、手机缩略图和媒体规格；更新 `WORK_PROGRESS.md`、`USER_FEEDBACK_LOG.md`、事故/经验记录和 source manifest，再交付文件路径与真实规格。不要自动对外发布。
+9. **渲染与合成**：先运行 `python scripts/iteration_preflight.py --project <project-dir> --phase render`，再跑 HyperFrames lint/check/inspect/render，最后用 Remotion 合成视觉轨、原音频和 Whisper 字幕。默认 1920×1080/30fps、H.264/AAC，除非用户另有要求。详细命令见 [rendering.md](references/rendering.md)。
+10. **人工 QA 与交付**：检查全分辨率关键帧、转场、字幕、脸/标题/字幕安全区、透明度、手机缩略图和媒体规格；更新 `WORK_PROGRESS.md`、`USER_FEEDBACK_LOG.md`、事故/经验记录和 source manifest，再交付文件路径与真实规格。没有迭代回归证据不得标记 `final`。不要自动对外发布。
 11. **发布安全门禁**：公开仓库前运行 `npm run security:validate`。首次克隆后由维护者手动运行 `npm run security:install-hook`，将唯一 hook 安装到当前项目的 `.git/hooks/pre-push`；未知 hook 默认不覆盖，只有显式 `--force` 才允许替换。CI 以 `--history` 重复检查完整历史。
 
 ## 参考资料 / References
@@ -82,6 +85,7 @@ task directory or a copied Skill folder.
 - [semantic-design.md](references/semantic-design.md)：真实口播校对、逐段设计表和流程组契约 / transcript fidelity and semantic planning。
 - [rendering.md](references/rendering.md)：HyperFrames/GSAP 与 Remotion 的分工、检查和导出 / rendering architecture。
 - [regression-and-qa.md](references/regression-and-qa.md)：全组件回归、关键帧和手机端人工检查 / visual QA。
+- [iteration-system.md](references/iteration-system.md)：每次视频任务必须加载的经验系统、视觉基线与 preflight/render 门禁。
 
 ## English summary
 
